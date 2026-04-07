@@ -3,640 +3,605 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Afriflow Admin — Bohlale Automated Services</title>
+<title>Afriflow AI — AI Automation for Small Businesses | Bohlale Automated Services</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --bg: #060810; --surface: #0d1020; --surface2: #131828; --surface3: #1a2035;
-    --border: rgba(255,255,255,0.07); --accent: #00e5a0; --accent2: #00b4ff;
-    --accent3: #ff6b35; --text: #f0f2ff; --muted: #7a82a0; --gold: #f5c842;
-    --danger: #ff4757; --warning: #ffa502;
+    --bg: #060810;
+    --surface: #0d1020;
+    --surface2: #131828;
+    --border: rgba(255,255,255,0.07);
+    --accent: #00e5a0;
+    --accent2: #00b4ff;
+    --accent3: #ff6b35;
+    --text: #f0f2ff;
+    --muted: #7a82a0;
+    --gold: #f5c842;
   }
+
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; min-height: 100vh; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
 
-  /* LOGIN SCREEN */
-  #login-screen {
-    position: fixed; inset: 0; background: var(--bg);
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 5%;
+    background: rgba(6,8,16,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 0.7rem; text-decoration: none; }
+  .logo-badge {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
-    z-index: 9999;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 12px; color: #060810;
+    letter-spacing: -0.5px;
   }
-  .login-box {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 20px; padding: 3rem 2.5rem; width: 100%; max-width: 420px;
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: var(--text); line-height: 1.2; }
+  .logo-sub { font-size: 0.65rem; color: var(--muted); font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta { background: var(--accent); color: #060810 !important; font-weight: 600; padding: 0.55rem 1.3rem; border-radius: 8px; font-size: 0.85rem !important; transition: opacity 0.2s !important; }
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
     text-align: center;
+    padding: 8rem 5% 5rem;
+    position: relative; overflow: hidden;
   }
-  .login-logo { width: 56px; height: 56px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px; color: #060810; margin: 0 auto 1.5rem; }
-  .login-box h2 { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 0.4rem; }
-  .login-box p { color: var(--muted); font-size: 0.85rem; margin-bottom: 2rem; }
-  .login-field { margin-bottom: 1rem; text-align: left; }
-  .login-field label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.06em; }
-  .login-field input { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 0.8rem 1rem; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
-  .login-field input:focus { border-color: rgba(0,229,160,0.4); }
-  .login-btn { width: 100%; background: var(--accent); color: #060810; font-weight: 700; font-size: 0.95rem; padding: 0.9rem; border-radius: 10px; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 0.5rem; transition: all 0.2s; }
-  .login-btn:hover { opacity: 0.85; }
-  .login-error { color: var(--danger); font-size: 0.82rem; margin-top: 0.8rem; display: none; }
-
-  /* LAYOUT */
-  #app { display: none; min-height: 100vh; }
-  .sidebar {
-    position: fixed; top: 0; left: 0; bottom: 0; width: 240px;
-    background: var(--surface); border-right: 1px solid var(--border);
-    display: flex; flex-direction: column; z-index: 100;
+  .hero-glow {
+    position: absolute; top: 20%; left: 50%; transform: translateX(-50%);
+    width: 700px; height: 500px;
+    background: radial-gradient(ellipse, rgba(0,229,160,0.12) 0%, rgba(0,180,255,0.06) 40%, transparent 70%);
+    pointer-events: none;
   }
-  .sidebar-logo { padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.8rem; }
-  .sidebar-logo-badge { width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 12px; color: #060810; flex-shrink: 0; }
-  .sidebar-logo-text { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; line-height: 1.2; }
-  .sidebar-logo-sub { font-size: 0.62rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
-  .sidebar-nav { flex: 1; padding: 1rem 0; overflow-y: auto; }
-  .nav-section-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); padding: 0.8rem 1.2rem 0.4rem; }
-  .nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.7rem 1.2rem; cursor: pointer; transition: all 0.2s; color: var(--muted); font-size: 0.88rem; border-left: 3px solid transparent; text-decoration: none; }
-  .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
-  .nav-item.active { color: var(--accent); background: rgba(0,229,160,0.06); border-left-color: var(--accent); }
-  .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
-  .sidebar-footer { padding: 1.2rem; border-top: 1px solid var(--border); }
-  .admin-pill { display: flex; align-items: center; gap: 0.7rem; }
-  .admin-avatar { width: 32px; height: 32px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; color: #060810; }
-  .admin-name { font-size: 0.82rem; font-weight: 600; }
-  .admin-role { font-size: 0.7rem; color: var(--muted); }
-  .logout-btn { margin-left: auto; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.8rem; padding: 0.3rem 0.6rem; border-radius: 6px; transition: all 0.2s; }
-  .logout-btn:hover { color: var(--danger); background: rgba(255,71,87,0.1); }
+  .hero-glow2 {
+    position: absolute; top: 50%; left: 20%;
+    width: 400px; height: 400px;
+    background: radial-gradient(ellipse, rgba(0,180,255,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(0,229,160,0.08); border: 1px solid rgba(0,229,160,0.2);
+    color: var(--accent); font-size: 0.78rem; font-weight: 500;
+    padding: 0.4rem 1rem; border-radius: 100px;
+    letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2rem;
+    animation: fadeUp 0.6s ease both;
+  }
+  .badge-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.7); } }
 
-  /* MAIN CONTENT */
-  .main { margin-left: 240px; padding: 2rem; min-height: 100vh; }
-  .page { display: none; }
-  .page.active { display: block; }
-  .page-header { margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
-  .page-title { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; }
-  .page-sub { color: var(--muted); font-size: 0.88rem; margin-top: 0.2rem; }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.6rem, 6vw, 5rem);
+    font-weight: 800; line-height: 1.08;
+    letter-spacing: -0.02em; margin-bottom: 1.5rem;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+  .hero h1 span.grad {
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hero h1 span.underline-accent { position: relative; }
+  .hero h1 span.underline-accent::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 3px; background: var(--accent3); border-radius: 2px;
+  }
+  .hero-desc { font-size: clamp(1rem, 2vw, 1.2rem); color: var(--muted); max-width: 600px; margin: 0 auto 2.5rem; font-weight: 300; animation: fadeUp 0.7s 0.2s ease both; }
+  .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.7s 0.3s ease both; margin-bottom: 4rem; }
+  .btn-primary {
+    background: var(--accent); color: #060810; font-weight: 700; font-size: 1rem;
+    padding: 0.9rem 2.2rem; border-radius: 10px; border: none; cursor: pointer;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.25s; font-family: 'DM Sans', sans-serif;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,229,160,0.35); }
+  .btn-secondary {
+    background: transparent; color: var(--text); font-weight: 500; font-size: 1rem;
+    padding: 0.9rem 2.2rem; border-radius: 10px; border: 1px solid var(--border);
+    cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.25s; font-family: 'DM Sans', sans-serif;
+  }
+  .btn-secondary:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.03); }
 
-  /* STATS CARDS */
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.4rem; transition: border-color 0.2s; }
-  .stat-card:hover { border-color: rgba(0,229,160,0.15); }
-  .stat-card-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.6rem; }
-  .stat-card-value { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; line-height: 1; }
-  .stat-card-value.green { color: var(--accent); }
-  .stat-card-value.blue { color: var(--accent2); }
-  .stat-card-value.orange { color: var(--accent3); }
-  .stat-card-value.gold { color: var(--gold); }
-  .stat-card-change { font-size: 0.75rem; color: var(--muted); margin-top: 0.4rem; }
-  .stat-card-change.up { color: var(--accent); }
+  .hero-stats { display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.7s 0.4s ease both; }
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--text); line-height: 1; }
+  .stat-num span { color: var(--accent); }
+  .stat-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.3rem; }
+  .stat-divider { width: 1px; background: var(--border); align-self: stretch; }
 
-  /* CLIENTS TABLE */
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 1.5rem; }
-  .card-header { padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-  .card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; }
-  .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1rem; border-radius: 8px; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; text-decoration: none; }
-  .btn-accent { background: var(--accent); color: #060810; }
-  .btn-accent:hover { opacity: 0.85; }
-  .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
-  .btn-ghost:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.03); }
-  .btn-danger { background: rgba(255,71,87,0.1); color: var(--danger); border: 1px solid rgba(255,71,87,0.2); }
-  .btn-danger:hover { background: rgba(255,71,87,0.2); }
-  .btn-small { padding: 0.35rem 0.7rem; font-size: 0.75rem; }
+  /* TICKER */
+  .ticker-wrap { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 0.9rem 0; overflow: hidden; white-space: nowrap; }
+  .ticker { display: inline-flex; gap: 3rem; animation: ticker 30s linear infinite; }
+  .ticker-item { display: inline-flex; align-items: center; gap: 0.7rem; font-size: 0.82rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; }
+  .ticker-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-  table { width: 100%; border-collapse: collapse; }
-  th { padding: 0.8rem 1.2rem; text-align: left; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--border); }
-  td { padding: 1rem 1.2rem; border-bottom: 1px solid var(--border); font-size: 0.85rem; vertical-align: middle; }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(255,255,255,0.02); }
+  /* SECTIONS */
+  section { padding: 6rem 5%; }
+  .section-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 1rem; }
+  .section-title { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 1.2rem; }
+  .section-desc { color: var(--muted); max-width: 550px; font-size: 1.05rem; font-weight: 300; }
 
-  .badge-pill { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.25rem 0.7rem; border-radius: 100px; font-size: 0.72rem; font-weight: 600; }
-  .pill-green { background: rgba(0,229,160,0.1); color: var(--accent); border: 1px solid rgba(0,229,160,0.2); }
-  .pill-blue { background: rgba(0,180,255,0.1); color: var(--accent2); border: 1px solid rgba(0,180,255,0.2); }
-  .pill-orange { background: rgba(255,165,2,0.1); color: var(--warning); border: 1px solid rgba(255,165,2,0.2); }
-  .pill-red { background: rgba(255,71,87,0.1); color: var(--danger); border: 1px solid rgba(255,71,87,0.2); }
-  .pill-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+  /* PROBLEMS */
+  .problems-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 3.5rem; }
+  .problem-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.8rem; position: relative; overflow: hidden; transition: border-color 0.3s; }
+  .problem-card:hover { border-color: rgba(255,107,53,0.3); }
+  .problem-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent3); transform: scaleX(0); transform-origin: left; transition: transform 0.4s; }
+  .problem-card:hover::before { transform: scaleX(1); }
+  .problem-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+  .problem-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
+  .problem-text { color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
 
-  /* MODAL */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; display: none; align-items: center; justify-content: center; padding: 1rem; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; width: 100%; max-width: 500px; }
-  .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
-  .modal-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; }
-  .modal-close { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.2rem; padding: 0.3rem; }
-  .form-field { margin-bottom: 1rem; }
-  .form-field label { display: block; font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.4rem; }
-  .form-field input, .form-field select { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 0.7rem 0.9rem; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; transition: border-color 0.2s; }
-  .form-field input:focus, .form-field select:focus { border-color: rgba(0,229,160,0.4); }
-  .form-field select option { background: var(--surface2); }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  /* FEATURES */
+  .features { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .features-header { text-align: center; margin-bottom: 4rem; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .feature-card { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; position: relative; overflow: hidden; transition: all 0.3s; cursor: default; }
+  .feature-card:hover { transform: translateY(-4px); border-color: rgba(0,229,160,0.2); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+  .feature-card.highlight { background: linear-gradient(135deg, rgba(0,229,160,0.06), rgba(0,180,255,0.04)); border-color: rgba(0,229,160,0.2); }
+  .feature-glow { position: absolute; bottom: -40px; right: -40px; width: 120px; height: 120px; border-radius: 50%; opacity: 0.15; filter: blur(30px); }
+  .feature-icon-wrap { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1.3rem; }
+  .f-green { background: rgba(0,229,160,0.1); }
+  .f-blue { background: rgba(0,180,255,0.1); }
+  .f-orange { background: rgba(255,107,53,0.1); }
+  .f-gold { background: rgba(245,200,66,0.1); }
+  .feature-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.6rem; }
+  .feature-desc { color: var(--muted); font-size: 0.88rem; line-height: 1.65; margin-bottom: 1.2rem; }
+  .feature-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .tag { font-size: 0.72rem; padding: 0.25rem 0.7rem; border-radius: 100px; font-weight: 500; border: 1px solid; }
+  .tag-green { background: rgba(0,229,160,0.07); border-color: rgba(0,229,160,0.2); color: var(--accent); }
+  .tag-blue { background: rgba(0,180,255,0.07); border-color: rgba(0,180,255,0.2); color: var(--accent2); }
+  .tag-orange { background: rgba(255,107,53,0.07); border-color: rgba(255,107,53,0.2); color: var(--accent3); }
 
-  /* ALERTS */
-  .alert { display: flex; align-items: flex-start; gap: 0.8rem; padding: 1rem 1.2rem; border-radius: 10px; margin-bottom: 0.8rem; font-size: 0.85rem; }
-  .alert-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
-  .alert-warning { background: rgba(255,165,2,0.08); border: 1px solid rgba(255,165,2,0.2); color: var(--warning); }
-  .alert-danger { background: rgba(255,71,87,0.08); border: 1px solid rgba(255,71,87,0.2); color: var(--danger); }
-  .alert-success { background: rgba(0,229,160,0.08); border: 1px solid rgba(0,229,160,0.2); color: var(--accent); }
-  .alert-text { flex: 1; }
-  .alert-title { font-weight: 600; margin-bottom: 0.2rem; }
-  .alert-desc { color: var(--muted); font-size: 0.8rem; }
+  /* HOW IT WORKS */
+  .how-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step { display: flex; gap: 1.5rem; padding: 1.8rem 0; border-bottom: 1px solid var(--border); transition: all 0.3s; cursor: default; }
+  .step:last-child { border-bottom: none; }
+  .step:hover .step-num { background: var(--accent); color: #060810; }
+  .step-num { width: 42px; height: 42px; min-width: 42px; border-radius: 12px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.9rem; transition: all 0.3s; }
+  .step-content h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 0.4rem; }
+  .step-content p { color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+  .how-visual { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 2rem; position: relative; overflow: hidden; }
+  .chat-bubble-wrap { display: flex; flex-direction: column; gap: 1rem; }
+  .chat-row { display: flex; gap: 0.8rem; align-items: flex-end; }
+  .chat-row.right { flex-direction: row-reverse; }
+  .chat-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
+  .av-user { background: rgba(0,180,255,0.2); color: var(--accent2); }
+  .av-bot { background: rgba(0,229,160,0.2); color: var(--accent); }
+  .bubble { max-width: 75%; padding: 0.8rem 1rem; border-radius: 14px; font-size: 0.82rem; line-height: 1.5; }
+  .bubble-user { background: rgba(0,180,255,0.1); border: 1px solid rgba(0,180,255,0.15); border-bottom-right-radius: 4px; }
+  .bubble-bot { background: rgba(0,229,160,0.06); border: 1px solid rgba(0,229,160,0.15); border-bottom-left-radius: 4px; }
+  .chat-label { font-size: 0.68rem; color: var(--muted); text-align: center; padding: 0.5rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  .typing-indicator { display: flex; gap: 4px; align-items: center; padding: 0.8rem 1rem; }
+  .typing-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: typingBounce 1.2s infinite; }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typingBounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.5; } 30% { transform: translateY(-6px); opacity: 1; } }
 
-  /* REVENUE CHART */
-  .chart-wrap { padding: 1.5rem; }
-  .bar-chart { display: flex; align-items: flex-end; gap: 0.6rem; height: 120px; }
-  .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; height: 100%; justify-content: flex-end; }
-  .bar { width: 100%; background: linear-gradient(to top, var(--accent), rgba(0,229,160,0.4)); border-radius: 4px 4px 0 0; transition: height 0.4s ease; min-height: 4px; }
-  .bar-label { font-size: 0.68rem; color: var(--muted); }
+  /* PRICING */
+  .pricing { text-align: center; }
+  .pricing-header { margin-bottom: 4rem; }
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+  .price-card { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 2.5rem 2rem; text-align: left; position: relative; transition: all 0.3s; }
+  .price-card:hover { transform: translateY(-4px); box-shadow: 0 30px 80px rgba(0,0,0,0.5); }
+  .price-card.featured { border-color: rgba(0,229,160,0.3); background: linear-gradient(160deg, rgba(0,229,160,0.05), var(--surface)); }
+  .price-card.featured::before { content: 'MOST POPULAR'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #060810; font-size: 0.68rem; font-weight: 800; padding: 0.3rem 1rem; border-radius: 100px; letter-spacing: 0.1em; white-space: nowrap; }
+  .price-tier { font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.8rem; }
+  .price-amount { font-family: 'Syne', sans-serif; font-size: 2.8rem; font-weight: 800; line-height: 1; margin-bottom: 0.4rem; }
+  .price-amount span { font-size: 1.2rem; font-weight: 400; color: var(--muted); vertical-align: super; font-family: 'DM Sans', sans-serif; }
+  .price-period { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+  .price-divider { height: 1px; background: var(--border); margin-bottom: 1.5rem; }
+  .price-features { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 2rem; }
+  .price-features li { display: flex; align-items: flex-start; gap: 0.7rem; font-size: 0.88rem; color: var(--muted); }
+  .price-features li.active { color: var(--text); }
+  .check { width: 18px; height: 18px; border-radius: 5px; background: rgba(0,229,160,0.1); border: 1px solid rgba(0,229,160,0.2); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; flex-shrink: 0; margin-top: 2px; }
+  .cross { width: 18px; height: 18px; border-radius: 5px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--muted); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; flex-shrink: 0; margin-top: 2px; }
+  .btn-price-primary { width: 100%; background: var(--accent); color: #060810; font-weight: 700; font-size: 0.95rem; padding: 0.9rem; border-radius: 12px; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.25s; }
+  .btn-price-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+  .btn-price-ghost { width: 100%; background: transparent; color: var(--text); font-weight: 600; font-size: 0.95rem; padding: 0.9rem; border-radius: 12px; border: 1px solid var(--border); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.25s; }
+  .btn-price-ghost:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.02); }
 
-  /* SYSTEM STATUS */
-  .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; padding: 1.5rem; }
-  .status-item { display: flex; align-items: center; gap: 0.8rem; }
-  .status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .dot-green { background: var(--accent); box-shadow: 0 0 8px rgba(0,229,160,0.5); animation: statusPulse 2s infinite; }
-  .dot-orange { background: var(--warning); }
-  .dot-red { background: var(--danger); }
-  @keyframes statusPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-  .status-info-name { font-weight: 600; font-size: 0.85rem; }
-  .status-info-sub { font-size: 0.75rem; color: var(--muted); }
+  /* TESTIMONIALS */
+  .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 3.5rem; }
+  .testimonial-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; transition: border-color 0.3s; }
+  .testimonial-card:hover { border-color: rgba(0,229,160,0.2); }
+  .stars { color: var(--gold); font-size: 0.9rem; margin-bottom: 1rem; letter-spacing: 2px; }
+  .testimonial-text { font-size: 0.92rem; line-height: 1.7; color: var(--muted); margin-bottom: 1.5rem; font-style: italic; }
+  .testimonial-author { display: flex; align-items: center; gap: 0.8rem; }
+  .author-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; color: #060810; }
+  .author-name { font-weight: 600; font-size: 0.88rem; }
+  .author-biz { font-size: 0.76rem; color: var(--muted); }
 
-  /* SETTINGS */
-  .settings-section { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 1.5rem; }
-  .settings-section-header { padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border); font-family: 'Syne', sans-serif; font-weight: 700; }
-  .settings-row { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); gap: 2rem; }
-  .settings-row:last-child { border-bottom: none; }
-  .settings-label { font-size: 0.88rem; font-weight: 500; }
-  .settings-sub { font-size: 0.78rem; color: var(--muted); }
-  .settings-value { font-size: 0.85rem; color: var(--muted); font-family: monospace; background: var(--surface2); padding: 0.3rem 0.7rem; border-radius: 6px; border: 1px solid var(--border); }
+  /* FAQ */
+  .faq-wrap { max-width: 700px; margin: 3rem auto 0; }
+  .faq-item { border-bottom: 1px solid var(--border); padding: 1.5rem 0; }
+  .faq-q { display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 600; font-size: 0.95rem; gap: 1rem; }
+  .faq-icon { width: 28px; height: 28px; min-width: 28px; border-radius: 8px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--accent); transition: transform 0.3s; }
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+  .faq-a { color: var(--muted); font-size: 0.88rem; line-height: 1.7; max-height: 0; overflow: hidden; transition: all 0.3s ease; padding-right: 2rem; }
+  .faq-item.open .faq-a { max-height: 200px; padding-top: 0.8rem; }
 
-  /* EMPTY STATE */
-  .empty-state { padding: 3rem; text-align: center; }
-  .empty-icon { font-size: 2.5rem; margin-bottom: 1rem; }
-  .empty-title { font-family: 'Syne', sans-serif; font-weight: 700; margin-bottom: 0.4rem; }
-  .empty-desc { color: var(--muted); font-size: 0.88rem; }
+  /* CTA */
+  .cta-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); text-align: center; padding: 7rem 5%; position: relative; overflow: hidden; }
+  .cta-section::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 600px; height: 300px; background: radial-gradient(ellipse, rgba(0,229,160,0.08) 0%, transparent 70%); pointer-events: none; }
+  .cta-section h2 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 800; margin-bottom: 1rem; line-height: 1.1; }
+  .cta-section p { color: var(--muted); max-width: 500px; margin: 0 auto 2.5rem; font-size: 1.05rem; }
+  .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
-  /* TOAST */
-  .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--surface); border: 1px solid var(--accent); color: var(--text); padding: 0.8rem 1.2rem; border-radius: 10px; font-size: 0.85rem; z-index: 9999; transform: translateY(100px); opacity: 0; transition: all 0.3s; box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
-  .toast.show { transform: translateY(0); opacity: 1; }
+  /* FOOTER */
+  footer { padding: 3rem 5%; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+  .footer-copy { color: var(--muted); font-size: 0.82rem; }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--text); }
 
-  @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; } }
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* WHATSAPP FLOAT */
+  .wa-float { position: fixed; bottom: 2rem; right: 2rem; width: 56px; height: 56px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; box-shadow: 0 8px 30px rgba(37,211,102,0.4); cursor: pointer; z-index: 400; animation: waFloat 3s ease-in-out infinite; text-decoration: none; }
+  @keyframes waFloat { 0%, 100% { transform: translateY(0); box-shadow: 0 8px 30px rgba(37,211,102,0.4); } 50% { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(37,211,102,0.5); } }
+
+  /* TECH STRIP */
+  .tech-strip { display: flex; align-items: center; justify-content: center; gap: 2.5rem; flex-wrap: wrap; margin-top: 3rem; opacity: 0.6; }
+  .tech-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .tech-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .how-wrap { grid-template-columns: 1fr; gap: 2.5rem; }
+    .hero-stats { gap: 1.5rem; }
+    .stat-divider { display: none; }
+    footer { flex-direction: column; align-items: flex-start; }
+  }
 </style>
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
-<div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo">AF</div>
-    <h2>Afriflow Admin</h2>
-    <p>Bohlale Automated Services — Owner Portal</p>
-    <div class="login-field"><label>Username</label><input type="text" id="login-user" placeholder="Enter username" /></div>
-    <div class="login-field"><label>Password</label><input type="password" id="login-pass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()" /></div>
-    <button class="login-btn" onclick="doLogin()">Sign In →</button>
-    <div class="login-error" id="login-error">Incorrect username or password.</div>
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="logo-badge">AF</div>
+    <div>
+      <div class="logo-text">Afriflow AI</div>
+      <div class="logo-sub">by Bohlale Automated Services</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a class="nav-cta" href="#pricing">Get Started</a></li>
+  </ul>
+</nav>
+
+<!-- WHATSAPP FLOAT -->
+<a class="wa-float" href="https://wa.me/27658619866" target="_blank" title="Chat on WhatsApp">💬</a>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="badge"><span class="badge-dot"></span>Now live in South Africa</div>
+  <h1>Your Business.<br/><span class="grad">Fully Automated.</span><br/><span class="underline-accent">24/7.</span></h1>
+  <p class="hero-desc">Stop losing customers to slow replies and missed bookings. Afriflow AI plugs directly into your WhatsApp, CRM, and email — so your business runs even while you sleep.</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="#pricing">Start Automating →</a>
+    <a class="btn-secondary" href="#how">See How It Works</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">3<span>min</span></div><div class="stat-label">Avg. reply time → instant</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat"><div class="stat-num">40<span>%+</span></div><div class="stat-label">More bookings captured</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat"><div class="stat-num">R3k<span>–</span>R20k</div><div class="stat-label">Per client, per month</div></div>
+  </div>
+  <div class="tech-strip">
+    <div class="tech-item"><div class="tech-icon">📱</div> WhatsApp API</div>
+    <div class="tech-item"><div class="tech-icon">🤖</div> OpenAI GPT-4</div>
+    <div class="tech-item"><div class="tech-icon">🐍</div> Flask Backend</div>
+    <div class="tech-item"><div class="tech-icon">📊</div> CRM Integration</div>
+    <div class="tech-item"><div class="tech-icon">📧</div> Email Sequences</div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item"><span class="ticker-dot"></span> WhatsApp Auto-Reply</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Booking Automation</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> CRM Lead Tracking</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Email Sequences</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> 24/7 AI Support</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Powered by GPT-4</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> South African Businesses</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Deploy in 48 Hours</span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="ticker-item"><span class="ticker-dot"></span> WhatsApp Auto-Reply</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Booking Automation</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> CRM Lead Tracking</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Email Sequences</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> 24/7 AI Support</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Powered by GPT-4</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> South African Businesses</span>
+    <span class="ticker-item"><span class="ticker-dot"></span> Deploy in 48 Hours</span>
   </div>
 </div>
 
-<!-- MAIN APP -->
-<div id="app">
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <div class="sidebar-logo">
-      <div class="sidebar-logo-badge">AF</div>
+<!-- PROBLEMS -->
+<section id="problems" style="background: var(--bg);">
+  <div style="text-align:center; margin-bottom:3.5rem;" class="reveal">
+    <div class="section-label">The Problem</div>
+    <h2 class="section-title">Small businesses are losing<br/>money every single day</h2>
+    <p class="section-desc" style="margin:0 auto;">Customers message. No one replies in time. They go to the competition. Sound familiar?</p>
+  </div>
+  <div class="problems-grid">
+    <div class="problem-card reveal"><div class="problem-icon">🕐</div><div class="problem-title">Slow or No Replies</div><p class="problem-text">62% of customers never return after a slow WhatsApp reply. Your competitors reply instantly — do you?</p></div>
+    <div class="problem-card reveal"><div class="problem-icon">📅</div><div class="problem-title">Missed Bookings</div><p class="problem-text">Booking requests at night, over weekends, during meetings — all lost because there was no one to respond.</p></div>
+    <div class="problem-card reveal"><div class="problem-icon">🗂️</div><div class="problem-title">Leads Falling Through</div><p class="problem-text">New enquiries come in but never get followed up. No system, no tracking, no pipeline — just lost revenue.</p></div>
+    <div class="problem-card reveal"><div class="problem-icon">📧</div><div class="problem-title">Zero Email Follow-Up</div><p class="problem-text">Most small businesses never follow up more than once. AI-driven sequences keep your brand top of mind automatically.</p></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="features-header reveal">
+    <div class="section-label">What You Get</div>
+    <h2 class="section-title">Four automation systems.<br/>Infinite leverage.</h2>
+    <p class="section-desc" style="margin: 0 auto;">Each module is plug-and-play, branded to your business, and running within 48 hours.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card highlight reveal">
+      <div class="feature-glow" style="background:var(--accent);"></div>
+      <div class="feature-icon-wrap f-green">📱</div>
+      <h3 class="feature-title">WhatsApp AI Replies</h3>
+      <p class="feature-desc">Your business answers every WhatsApp message instantly — even at 2am. The AI is trained on your FAQs, services, and pricing. Feels 100% human.</p>
+      <div class="feature-tags"><span class="tag tag-green">WhatsApp Business API</span><span class="tag tag-blue">GPT-4</span><span class="tag tag-green">24/7 Active</span></div>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-glow" style="background:var(--accent2);"></div>
+      <div class="feature-icon-wrap f-blue">📅</div>
+      <h3 class="feature-title">Smart Booking System</h3>
+      <p class="feature-desc">Customers book appointments directly via WhatsApp or a web link. Calendars sync automatically. Reminder messages fire before each appointment. Zero no-shows.</p>
+      <div class="feature-tags"><span class="tag tag-blue">Google Calendar</span><span class="tag tag-green">Auto Reminders</span><span class="tag tag-orange">No-Show Prevention</span></div>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-glow" style="background:var(--accent3);"></div>
+      <div class="feature-icon-wrap f-orange">🎯</div>
+      <h3 class="feature-title">CRM Lead Tracking</h3>
+      <p class="feature-desc">Every lead from WhatsApp, website, or email gets captured, tagged, and tracked through a visual pipeline. Never lose a hot lead again.</p>
+      <div class="feature-tags"><span class="tag tag-orange">Pipeline View</span><span class="tag tag-green">Auto-Tagging</span><span class="tag tag-blue">Lead Scoring</span></div>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-glow" style="background:var(--gold);"></div>
+      <div class="feature-icon-wrap f-gold">📧</div>
+      <h3 class="feature-title">Email Drip Sequences</h3>
+      <p class="feature-desc">From first enquiry to closed deal — automated emails go out at the right time with the right message. Nurture cold leads to paying clients on autopilot.</p>
+      <div class="feature-tags"><span class="tag tag-green">AI-Written</span><span class="tag tag-blue">Triggered Sends</span><span class="tag tag-orange">Conversion Optimised</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="how-wrap">
+    <div class="reveal">
+      <div class="section-label">Process</div>
+      <h2 class="section-title">Live in 48 hours.<br/>Zero tech skill needed.</h2>
+      <p class="section-desc" style="margin-bottom: 2.5rem;">We handle the full setup. You just answer a few questions.</p>
+      <div class="steps">
+        <div class="step"><div class="step-num">01</div><div class="step-content"><h4>Onboarding Call (30 min)</h4><p>We capture your FAQs, services, pricing, and brand tone. That's all we need.</p></div></div>
+        <div class="step"><div class="step-num">02</div><div class="step-content"><h4>AI Training & System Build</h4><p>We train the AI on your business data, configure WhatsApp, set up the booking system and CRM pipeline.</p></div></div>
+        <div class="step"><div class="step-num">03</div><div class="step-content"><h4>Go Live — Full Testing</h4><p>Everything is tested end-to-end. We simulate real conversations, bookings, and lead flows before handover.</p></div></div>
+        <div class="step"><div class="step-num">04</div><div class="step-content"><h4>Monthly Retainer — Hands Off</h4><p>Your system runs on autopilot. We monitor, improve, and update the AI. You focus on your business.</p></div></div>
+      </div>
+    </div>
+    <div class="how-visual reveal">
+      <div class="chat-label">Live demo — WhatsApp AI in action</div>
+      <div class="chat-bubble-wrap">
+        <div class="chat-row"><div class="chat-avatar av-user">👤</div><div class="bubble bubble-user">Hi, do you have availability for a hair appointment this Saturday at 10am?</div></div>
+        <div class="chat-row right"><div class="chat-avatar av-bot">🤖</div><div class="bubble bubble-bot">Hey! Yes, we have 10am available this Saturday 😊 That'll be a wash & blow-dry — R350. Want me to book that for you?</div></div>
+        <div class="chat-row"><div class="chat-avatar av-user">👤</div><div class="bubble bubble-user">Yes please! My name is Zanele Dlamini</div></div>
+        <div class="chat-row right"><div class="chat-avatar av-bot">🤖</div><div class="bubble bubble-bot">Perfect Zanele! ✅ You're booked for Saturday 12 April at 10:00am. You'll get a reminder the night before. See you then!</div></div>
+        <div class="chat-row right"><div class="chat-avatar av-bot">🤖</div><div class="bubble bubble-bot" style="background:rgba(245,200,66,0.06); border-color:rgba(245,200,66,0.15); font-size:0.76rem; color:var(--muted);">📋 Lead added to CRM · 📅 Booking confirmed · 📧 Confirmation email sent</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing" style="background:var(--surface); border-top:1px solid var(--border);">
+  <div class="pricing-header reveal">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Simple, transparent pricing.</h2>
+    <p style="color:var(--muted); max-width:520px; margin:0 auto; font-size:1rem;">No setup fees. No lock-in contracts. Cancel anytime with 30 days notice.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card reveal">
+      <div class="price-tier">Starter</div>
+      <div class="price-amount"><span>R</span>3,000</div>
+      <div class="price-period">per month</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li class="active"><span class="check">✓</span> WhatsApp AI Auto-Reply</li>
+        <li class="active"><span class="check">✓</span> Up to 500 messages/month</li>
+        <li class="active"><span class="check">✓</span> Basic FAQ training</li>
+        <li class="active"><span class="check">✓</span> Monthly performance report</li>
+        <li><span class="cross">×</span> Booking System</li>
+        <li><span class="cross">×</span> CRM Pipeline</li>
+        <li><span class="cross">×</span> Email Sequences</li>
+      </ul>
+      <a class="btn-price-ghost" href="checkout.html?pkg=Starter" style="text-decoration:none; text-align:center;">Get Started →</a>
+    </div>
+    <div class="price-card featured reveal">
+      <div class="price-tier">Growth</div>
+      <div class="price-amount"><span>R</span>8,500</div>
+      <div class="price-period">per month</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li class="active"><span class="check">✓</span> WhatsApp AI Auto-Reply</li>
+        <li class="active"><span class="check">✓</span> Unlimited messages</li>
+        <li class="active"><span class="check">✓</span> Full AI training on business data</li>
+        <li class="active"><span class="check">✓</span> Smart Booking System</li>
+        <li class="active"><span class="check">✓</span> CRM Lead Pipeline</li>
+        <li class="active"><span class="check">✓</span> 3-step email sequence</li>
+        <li><span class="cross">×</span> Custom integrations</li>
+      </ul>
+      <a class="btn-price-primary" href="checkout.html?pkg=Growth" style="text-decoration:none; text-align:center;">Get This Package →</a>
+    </div>
+    <div class="price-card reveal">
+      <div class="price-tier">Enterprise</div>
+      <div class="price-amount"><span>R</span>20,000</div>
+      <div class="price-period">per month</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li class="active"><span class="check">✓</span> Everything in Growth</li>
+        <li class="active"><span class="check">✓</span> Multi-channel AI (WA + Web)</li>
+        <li class="active"><span class="check">✓</span> Advanced CRM with reporting</li>
+        <li class="active"><span class="check">✓</span> Full email automation suite</li>
+        <li class="active"><span class="check">✓</span> Custom API integrations</li>
+        <li class="active"><span class="check">✓</span> Dedicated account manager</li>
+        <li class="active"><span class="check">✓</span> Priority 24/7 support</li>
+      </ul>
+      <a class="btn-price-ghost" href="checkout.html?pkg=Enterprise" style="text-decoration:none; text-align:center;">Get This Package →</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div style="text-align:center;" class="reveal">
+    <div class="section-label">Results</div>
+    <h2 class="section-title">Businesses already seeing results</h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"We used to miss enquiries every night. Since Afriflow set up the WhatsApp bot, we've captured 3× more leads without lifting a finger. Worth every rand."</p>
+      <div class="testimonial-author"><div class="author-avatar">TM</div><div><div class="author-name">Thandi Molefe</div><div class="author-biz">Elegance Hair Studio, Soweto</div></div></div>
+    </div>
+    <div class="testimonial-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"The booking system alone saved us from double-bookings and no-shows. Our clients love the automatic reminders. We look so professional now."</p>
+      <div class="testimonial-author"><div class="author-avatar">SN</div><div><div class="author-name">Sipho Nkosi</div><div class="author-biz">FitZone Gym, Pretoria</div></div></div>
+    </div>
+    <div class="testimonial-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"I was skeptical about AI for our small restaurant, but the WhatsApp replies handle reservations better than I did. Revenue is up 28% month-on-month."</p>
+      <div class="testimonial-author"><div class="author-avatar">LK</div><div><div class="author-name">Lerato Khumalo</div><div class="author-biz">Mzansi Kitchen, JHB</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" style="background:var(--surface); border-top:1px solid var(--border);">
+  <div style="text-align:center;" class="reveal">
+    <div class="section-label">FAQ</div>
+    <h2 class="section-title">Questions answered</h2>
+  </div>
+  <div class="faq-wrap">
+    <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">Do I need a verified WhatsApp Business account?<div class="faq-icon">+</div></div><div class="faq-a">Yes — you need a WhatsApp Business account and we assist with the Meta Business API verification process as part of onboarding. It typically takes 2–5 business days to verify.</div></div>
+    <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">How long does setup take?<div class="faq-icon">+</div></div><div class="faq-a">For Starter and Growth packages, the full system is live within 48 hours of completing the onboarding call. Enterprise setups with custom integrations take up to 7 business days.</div></div>
+    <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">Will the AI sound robotic to my customers?<div class="faq-icon">+</div></div><div class="faq-a">No. We train the AI specifically on your business tone, language, and common phrases. We support Zulu, Sotho, and Afrikaans alongside English. Customers rarely realise they're talking to an AI.</div></div>
+    <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">What happens if the AI can't answer a question?<div class="faq-icon">+</div></div><div class="faq-a">The AI gracefully hands off to you with a message like "Let me get a human to assist you with that" — and flags the conversation for follow-up. No dropped balls.</div></div>
+    <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">Is there a contract?<div class="faq-icon">+</div></div><div class="faq-a">We operate on a month-to-month basis with a 30-day notice period. No lock-in — we earn your loyalty through results, not contracts.</div></div>
+    <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">What industries work best?<div class="faq-icon">+</div></div><div class="faq-a">Beauty & hair salons, gyms, restaurants, clinics, estate agents, law firms, logistics companies, tutoring services, and any business that gets enquiries via WhatsApp. If you have customers, this works.</div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="reveal">
+    <div class="badge" style="display:inline-flex; margin: 0 auto 1.5rem;"><span class="badge-dot"></span>Limited onboarding slots this month</div>
+    <h2>Ready to automate<br/><span style="color:var(--accent);">your business?</span></h2>
+    <p>Book a free 20-minute discovery call. We'll show you exactly how Afriflow AI transforms your business — and what you start saving every month.</p>
+    <div class="cta-actions">
+      <a class="btn-primary" href="https://wa.me/27658619866" target="_blank">📱 WhatsApp Us Now</a>
+      <a class="btn-secondary" href="mailto:lethabomashia17@gmail.com">✉ Send an Email</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <a class="nav-logo" href="#" style="text-decoration:none; display:flex; align-items:center; gap:0.7rem;">
+      <div class="logo-badge">AF</div>
       <div>
-        <div class="sidebar-logo-text">Afriflow AI</div>
-        <div class="sidebar-logo-sub">Admin Portal</div>
+        <div class="logo-text" style="font-size:0.9rem;">Afriflow AI</div>
+        <div class="logo-sub">by Bohlale Automated Services</div>
       </div>
-    </div>
-    <nav class="sidebar-nav">
-      <div class="nav-section-label">Overview</div>
-      <a class="nav-item active" onclick="showPage('dashboard')" href="#">
-        <span class="nav-icon">📊</span> Dashboard
-      </a>
-      <a class="nav-item" onclick="showPage('clients')" href="#">
-        <span class="nav-icon">🏢</span> Clients
-      </a>
-      <a class="nav-item" onclick="showPage('revenue')" href="#">
-        <span class="nav-icon">💰</span> Revenue
-      </a>
-      <div class="nav-section-label">System</div>
-      <a class="nav-item" onclick="showPage('alerts')" href="#">
-        <span class="nav-icon">🔔</span> Alerts <span id="alert-badge" style="margin-left:auto; background:var(--danger); color:white; font-size:0.65rem; padding:0.1rem 0.4rem; border-radius:100px; font-weight:700;">2</span>
-      </a>
-      <a class="nav-item" onclick="showPage('status')" href="#">
-        <span class="nav-icon">⚡</span> System Status
-      </a>
-      <a class="nav-item" onclick="showPage('settings')" href="#">
-        <span class="nav-icon">⚙️</span> Settings
-      </a>
-      <div class="nav-section-label">Quick Links</div>
-      <a class="nav-item" href="index.html" target="_blank">
-        <span class="nav-icon">🌐</span> Live Website
-      </a>
-    </nav>
-    <div class="sidebar-footer">
-      <div class="admin-pill">
-        <div class="admin-avatar">L</div>
-        <div><div class="admin-name">Lethabo</div><div class="admin-role">Owner — BAS</div></div>
-        <button class="logout-btn" onclick="doLogout()">Out</button>
-      </div>
-    </div>
+    </a>
   </div>
-
-  <!-- MAIN CONTENT -->
-  <div class="main">
-
-    <!-- DASHBOARD PAGE -->
-    <div class="page active" id="page-dashboard">
-      <div class="page-header">
-        <div><div class="page-title">Dashboard</div><div class="page-sub">Welcome back, Lethabo. Here's your business at a glance.</div></div>
-        <button class="btn btn-accent" onclick="showPage('clients'); openAddModal()">+ Add Client</button>
-      </div>
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-card-label">Active Clients</div><div class="stat-card-value green" id="stat-clients">0</div><div class="stat-card-change up" id="stat-clients-change">–</div></div>
-        <div class="stat-card"><div class="stat-card-label">Monthly Revenue</div><div class="stat-card-value blue" id="stat-revenue">R0</div><div class="stat-card-change up" id="stat-revenue-change">–</div></div>
-        <div class="stat-card"><div class="stat-card-label">Starter Clients</div><div class="stat-card-value orange" id="stat-starter">0</div><div class="stat-card-change">@ R3,000/mo</div></div>
-        <div class="stat-card"><div class="stat-card-label">Growth Clients</div><div class="stat-card-value gold" id="stat-growth">0</div><div class="stat-card-change">@ R8,500/mo</div></div>
-      </div>
-
-      <!-- Recent Alerts -->
-      <div class="card">
-        <div class="card-header"><div class="card-title">🔔 Recent Alerts</div><a class="btn btn-ghost btn-small" onclick="showPage('alerts')" href="#">View All</a></div>
-        <div style="padding:1rem 1.5rem;" id="dashboard-alerts">
-          <div class="alert alert-warning"><div class="alert-icon">⚠️</div><div class="alert-text"><div class="alert-title">Payment Reminder</div><div class="alert-desc">No clients added yet. Add your first client to start tracking.</div></div></div>
-        </div>
-      </div>
-
-      <!-- Client List Preview -->
-      <div class="card">
-        <div class="card-header"><div class="card-title">🏢 Your Clients</div><a class="btn btn-ghost btn-small" onclick="showPage('clients')" href="#">Manage All</a></div>
-        <div id="dashboard-client-preview">
-          <div class="empty-state"><div class="empty-icon">🏢</div><div class="empty-title">No clients yet</div><div class="empty-desc">Add your first client to see them here.</div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CLIENTS PAGE -->
-    <div class="page" id="page-clients">
-      <div class="page-header">
-        <div><div class="page-title">Clients</div><div class="page-sub">All businesses using Afriflow AI</div></div>
-        <button class="btn btn-accent" onclick="openAddModal()">+ Add New Client</button>
-      </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">All Clients (<span id="client-count">0</span>)</div>
-          <input type="text" id="client-search" placeholder="Search clients..." style="background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:0.5rem 0.9rem; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:0.82rem; outline:none; width:200px;" oninput="renderClientTable()" />
-        </div>
-        <div id="client-table-wrap">
-          <div class="empty-state"><div class="empty-icon">🏢</div><div class="empty-title">No clients yet</div><div class="empty-desc">Click "Add New Client" to add your first client.</div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- REVENUE PAGE -->
-    <div class="page" id="page-revenue">
-      <div class="page-header"><div><div class="page-title">Revenue</div><div class="page-sub">Monthly recurring revenue breakdown</div></div></div>
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-card-label">Total MRR</div><div class="stat-card-value green" id="rev-total">R0</div><div class="stat-card-change">Monthly Recurring Revenue</div></div>
-        <div class="stat-card"><div class="stat-card-label">Annual Run Rate</div><div class="stat-card-value blue" id="rev-annual">R0</div><div class="stat-card-change">If all clients stay</div></div>
-        <div class="stat-card"><div class="stat-card-label">Avg. Per Client</div><div class="stat-card-value gold" id="rev-avg">R0</div><div class="stat-card-change">Average package value</div></div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title">Revenue by Package</div></div>
-        <div id="revenue-breakdown" style="padding:1.5rem;">
-          <div style="color:var(--muted); font-size:0.88rem; text-align:center; padding:2rem;">Add clients to see revenue breakdown</div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title">Revenue Growth (Simulated)</div></div>
-        <div class="chart-wrap">
-          <div class="bar-chart" id="rev-chart"></div>
-          <div style="display:flex; justify-content:space-between; padding-top:0.5rem;" id="rev-chart-labels"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ALERTS PAGE -->
-    <div class="page" id="page-alerts">
-      <div class="page-header"><div><div class="page-title">Alerts</div><div class="page-sub">System notifications and action items</div></div></div>
-      <div id="alerts-container">
-        <div class="alert alert-success"><div class="alert-icon">✅</div><div class="alert-text"><div class="alert-title">System Online</div><div class="alert-desc">Afriflow AI admin portal is running. Add clients to start tracking.</div></div></div>
-        <div class="alert alert-warning"><div class="alert-icon">⚠️</div><div class="alert-text"><div class="alert-title">WhatsApp API Not Connected</div><div class="alert-desc">You need to connect your WhatsApp Business API. Go to Settings to add your credentials.</div></div></div>
-        <div class="alert alert-warning"><div class="alert-icon">⚠️</div><div class="alert-text"><div class="alert-title">OpenAI API Not Connected</div><div class="alert-desc">Add your OpenAI API key in Settings to enable AI features.</div></div></div>
-      </div>
-    </div>
-
-    <!-- SYSTEM STATUS PAGE -->
-    <div class="page" id="page-status">
-      <div class="page-header"><div><div class="page-title">System Status</div><div class="page-sub">API connections and integration health</div></div></div>
-      <div class="card">
-        <div class="card-header"><div class="card-title">Integration Status</div></div>
-        <div class="status-grid">
-          <div class="status-item"><div class="status-dot dot-green"></div><div class="status-info"><div class="status-info-name">Admin Portal</div><div class="status-info-sub">Online ✓</div></div></div>
-          <div class="status-item"><div class="status-dot dot-orange"></div><div class="status-info"><div class="status-info-name">WhatsApp Business API</div><div class="status-info-sub">Not configured</div></div></div>
-          <div class="status-item"><div class="status-dot dot-orange"></div><div class="status-info"><div class="status-info-name">OpenAI (GPT-4)</div><div class="status-info-sub">Not configured</div></div></div>
-          <div class="status-item"><div class="status-dot dot-orange"></div><div class="status-info"><div class="status-info-name">Google Calendar</div><div class="status-info-sub">Not configured</div></div></div>
-          <div class="status-item"><div class="status-dot dot-orange"></div><div class="status-info"><div class="status-info-name">Email (SMTP)</div><div class="status-info-sub">Not configured</div></div></div>
-          <div class="status-item"><div class="status-dot dot-orange"></div><div class="status-info"><div class="status-info-name">Flask Backend</div><div class="status-info-sub">Not deployed</div></div></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title">📋 Setup Checklist</div></div>
-        <div style="padding:1.5rem; display:flex; flex-direction:column; gap:0.8rem;">
-          <div style="display:flex; align-items:center; gap:0.8rem; font-size:0.88rem;"><span style="color:var(--accent);">✅</span> Admin dashboard created</div>
-          <div style="display:flex; align-items:center; gap:0.8rem; font-size:0.88rem;"><span style="color:var(--accent);">✅</span> Client-facing website ready</div>
-          <div style="display:flex; align-items:center; gap:0.8rem; font-size:0.88rem; color:var(--muted);"><span>⬜</span> Apply for WhatsApp Business API at business.whatsapp.com</div>
-          <div style="display:flex; align-items:center; gap:0.8rem; font-size:0.88rem; color:var(--muted);"><span>⬜</span> Get OpenAI API key at platform.openai.com</div>
-          <div style="display:flex; align-items:center; gap:0.8rem; font-size:0.88rem; color:var(--muted);"><span>⬜</span> Deploy Flask backend (Railway / Render)</div>
-          <div style="display:flex; align-items:center; gap:0.8rem; font-size:0.88rem; color:var(--muted);"><span>⬜</span> Connect Google Calendar API</div>
-          <div style="display:flex; align-items:center; gap:0.8rem; font-size:0.88rem; color:var(--muted);"><span>⬜</span> Set up email sending (Gmail SMTP or SendGrid)</div>
-          <div style="display:flex; align-items:center; gap:0.8rem; font-size:0.88rem; color:var(--muted);"><span>⬜</span> Add your first paying client</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SETTINGS PAGE -->
-    <div class="page" id="page-settings">
-      <div class="page-header"><div><div class="page-title">Settings</div><div class="page-sub">Your credentials and business configuration</div></div></div>
-      <div class="settings-section">
-        <div class="settings-section-header">🔐 Admin Access</div>
-        <div class="settings-row"><div><div class="settings-label">Username</div><div class="settings-sub">Your admin login username</div></div><div class="settings-value">lethabo</div></div>
-        <div class="settings-row"><div><div class="settings-label">Password</div><div class="settings-sub">Change in admin/index.html → ADMIN_PASS variable</div></div><div class="settings-value">••••••••••••</div></div>
-      </div>
-      <div class="settings-section">
-        <div class="settings-section-header">📞 Contact Details</div>
-        <div class="settings-row"><div><div class="settings-label">WhatsApp Number</div><div class="settings-sub">Displayed on website and CTA buttons</div></div><div class="settings-value">+27 658 619 866</div></div>
-        <div class="settings-row"><div><div class="settings-label">Email Address</div><div class="settings-sub">Contact email on website</div></div><div class="settings-value">lethabomashia17@gmail.com</div></div>
-        <div class="settings-row"><div><div class="settings-label">Business Name</div><div class="settings-sub">Trading as</div></div><div class="settings-value">Bohlale Automated Services</div></div>
-        <div class="settings-row"><div><div class="settings-label">Product Name</div><div class="settings-sub">System 2</div></div><div class="settings-value">Afriflow AI</div></div>
-      </div>
-      <div class="settings-section">
-        <div class="settings-section-header">🔧 API Keys (Add when ready)</div>
-        <div class="settings-row"><div><div class="settings-label">WhatsApp Business API Token</div><div class="settings-sub">From Meta Business → business.whatsapp.com</div></div><div class="settings-value">Not set</div></div>
-        <div class="settings-row"><div><div class="settings-label">OpenAI API Key</div><div class="settings-sub">From platform.openai.com → starts with sk-...</div></div><div class="settings-value">Not set</div></div>
-        <div class="settings-row"><div><div class="settings-label">Flask Backend URL</div><div class="settings-sub">Your deployed server on Railway/Render</div></div><div class="settings-value">Not deployed</div></div>
-      </div>
-    </div>
-
-  </div><!-- /main -->
-</div><!-- /app -->
-
-<!-- ADD CLIENT MODAL -->
-<div class="modal-overlay" id="add-modal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">➕ Add New Client</div>
-      <button class="modal-close" onclick="closeAddModal()">✕</button>
-    </div>
-    <div class="form-row">
-      <div class="form-field"><label>Business Name *</label><input type="text" id="f-name" placeholder="e.g. Thandi's Hair Studio" /></div>
-      <div class="form-field"><label>Owner Name</label><input type="text" id="f-owner" placeholder="e.g. Thandi Molefe" /></div>
-    </div>
-    <div class="form-row">
-      <div class="form-field"><label>WhatsApp Number *</label><input type="text" id="f-whatsapp" placeholder="e.g. 0812345678" /></div>
-      <div class="form-field"><label>Email</label><input type="text" id="f-email" placeholder="client@email.com" /></div>
-    </div>
-    <div class="form-row">
-      <div class="form-field"><label>Package *</label>
-        <select id="f-package">
-          <option value="Starter">Starter — R3,000/mo</option>
-          <option value="Growth" selected>Growth — R8,500/mo</option>
-          <option value="Enterprise">Enterprise — R20,000/mo</option>
-        </select>
-      </div>
-      <div class="form-field"><label>Industry</label>
-        <select id="f-industry">
-          <option>Hair & Beauty</option>
-          <option>Gym & Fitness</option>
-          <option>Restaurant</option>
-          <option>Clinic / Medical</option>
-          <option>Estate Agent</option>
-          <option>Law Firm</option>
-          <option>Tutoring</option>
-          <option>Other</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-field"><label>Status</label>
-      <select id="f-status">
-        <option value="Active">Active</option>
-        <option value="Onboarding">Onboarding</option>
-        <option value="Paused">Paused</option>
-      </select>
-    </div>
-    <div style="display:flex; gap:0.8rem; margin-top:1rem;">
-      <button class="btn btn-ghost" style="flex:1" onclick="closeAddModal()">Cancel</button>
-      <button class="btn btn-accent" style="flex:2" onclick="saveClient()">Save Client →</button>
-    </div>
+  <div class="footer-copy">© 2025 Bohlale Automated Services. All rights reserved.</div>
+  <div class="footer-links">
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms of Service</a>
+    <a href="https://wa.me/27658619866" target="_blank">Contact</a>
   </div>
-</div>
-
-<div class="toast" id="toast"></div>
+</footer>
 
 <script>
-  // ============================================================
-  // CONFIG — Change password here
-  // ============================================================
-  const ADMIN_USER = 'lethabo';
-  const ADMIN_PASS = 'BAS2025admin!';
-
-  // Package prices
-  const PRICES = { Starter: 3000, Growth: 8500, Enterprise: 20000 };
-
-  // ============================================================
-  // LOGIN
-  // ============================================================
-  function doLogin() {
-    const u = document.getElementById('login-user').value.trim();
-    const p = document.getElementById('login-pass').value.trim();
-    const err = document.getElementById('login-error');
-    if (u === ADMIN_USER && p === ADMIN_PASS) {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('app').style.display = 'block';
-      refreshAll();
-    } else {
-      err.style.display = 'block';
-      setTimeout(() => err.style.display = 'none', 3000);
-    }
+  function toggleFaq(el) {
+    const item = el.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
   }
 
-  function doLogout() {
-    document.getElementById('app').style.display = 'none';
-    document.getElementById('login-screen').style.display = 'flex';
-    document.getElementById('login-user').value = '';
-    document.getElementById('login-pass').value = '';
-  }
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-  // ============================================================
-  // NAVIGATION
-  // ============================================================
-  function showPage(name) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById('page-' + name).classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(n => {
-      if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + name + "'")) n.classList.add('active');
-    });
-    if (name === 'revenue') renderRevenuePage();
-    if (name === 'clients') renderClientTable();
-    if (name === 'dashboard') renderDashboard();
-    return false;
-  }
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    el.style.transitionDelay = `${(i % 4) * 0.07}s`;
+    observer.observe(el);
+  });
 
-  // ============================================================
-  // CLIENT DATA (localStorage)
-  // ============================================================
-  function getClients() {
-    try { return JSON.parse(localStorage.getItem('af_clients') || '[]'); } catch { return []; }
-  }
-  function saveClients(arr) { localStorage.setItem('af_clients', JSON.stringify(arr)); }
-
-  // ============================================================
-  // ADD CLIENT MODAL
-  // ============================================================
-  function openAddModal() { document.getElementById('add-modal').classList.add('open'); }
-  function closeAddModal() { document.getElementById('add-modal').classList.remove('open'); clearForm(); }
-  function clearForm() { ['f-name','f-owner','f-whatsapp','f-email'].forEach(id => document.getElementById(id).value = ''); }
-
-  function saveClient() {
-    const name = document.getElementById('f-name').value.trim();
-    const wa = document.getElementById('f-whatsapp').value.trim();
-    if (!name) { showToast('Please enter a business name'); return; }
-    if (!wa) { showToast('Please enter a WhatsApp number'); return; }
-    const clients = getClients();
-    clients.push({
-      id: Date.now(),
-      name, owner: document.getElementById('f-owner').value.trim(),
-      whatsapp: wa, email: document.getElementById('f-email').value.trim(),
-      package: document.getElementById('f-package').value,
-      industry: document.getElementById('f-industry').value,
-      status: document.getElementById('f-status').value,
-      addedDate: new Date().toLocaleDateString('en-ZA')
-    });
-    saveClients(clients);
-    closeAddModal();
-    refreshAll();
-    showToast('✅ Client added successfully!');
-  }
-
-  function deleteClient(id) {
-    if (!confirm('Remove this client?')) return;
-    saveClients(getClients().filter(c => c.id !== id));
-    refreshAll();
-    showToast('Client removed.');
-  }
-
-  function waClient(number) { window.open('https://wa.me/27' + number.replace(/^0/, '').replace(/\D/g,'')); }
-
-  // ============================================================
-  // RENDER FUNCTIONS
-  // ============================================================
-  function refreshAll() { renderDashboard(); renderClientTable(); renderRevenuePage(); }
-
-  function renderDashboard() {
-    const clients = getClients();
-    const active = clients.filter(c => c.status === 'Active');
-    const starter = clients.filter(c => c.package === 'Starter');
-    const growth = clients.filter(c => c.package === 'Growth');
-    const mrr = clients.reduce((s, c) => s + (PRICES[c.package] || 0), 0);
-
-    document.getElementById('stat-clients').textContent = clients.length;
-    document.getElementById('stat-revenue').textContent = 'R' + mrr.toLocaleString('en-ZA');
-    document.getElementById('stat-starter').textContent = starter.length;
-    document.getElementById('stat-growth').textContent = growth.length;
-    document.getElementById('stat-clients-change').textContent = active.length + ' active';
-    document.getElementById('stat-revenue-change').textContent = clients.length > 0 ? '↑ Keep growing!' : 'Add first client';
-
-    // Alerts
-    const alertsEl = document.getElementById('dashboard-alerts');
-    if (clients.length === 0) {
-      alertsEl.innerHTML = `<div class="alert alert-warning"><div class="alert-icon">⚠️</div><div class="alert-text"><div class="alert-title">No clients yet</div><div class="alert-desc">Add your first client to start earning.</div></div></div>`;
-    } else {
-      alertsEl.innerHTML = `<div class="alert alert-success"><div class="alert-icon">✅</div><div class="alert-text"><div class="alert-title">System Active</div><div class="alert-desc">You have ${clients.length} client(s) generating R${mrr.toLocaleString('en-ZA')}/mo</div></div></div>`;
-    }
-
-    // Preview table
-    const prev = document.getElementById('dashboard-client-preview');
-    if (clients.length === 0) {
-      prev.innerHTML = `<div class="empty-state"><div class="empty-icon">🏢</div><div class="empty-title">No clients yet</div><div class="empty-desc">Add your first client to see them here.</div></div>`;
-    } else {
-      prev.innerHTML = `<table><thead><tr><th>Business</th><th>Package</th><th>Status</th><th>Revenue</th></tr></thead><tbody>` +
-        clients.slice(0,5).map(c => `<tr><td><strong>${c.name}</strong><br/><span style="color:var(--muted); font-size:0.75rem;">${c.industry}</span></td><td><span class="badge-pill ${c.package==='Growth'?'pill-blue':c.package==='Enterprise'?'pill-orange':'pill-green'}">${c.package}</span></td><td><span class="badge-pill ${c.status==='Active'?'pill-green':c.status==='Onboarding'?'pill-blue':'pill-orange'}"><span class="pill-dot"></span>${c.status}</span></td><td style="color:var(--accent); font-weight:700;">R${PRICES[c.package].toLocaleString('en-ZA')}</td></tr>`).join('') +
-        `</tbody></table>`;
-    }
-  }
-
-  function renderClientTable() {
-    const search = (document.getElementById('client-search')?.value || '').toLowerCase();
-    const clients = getClients().filter(c => !search || c.name.toLowerCase().includes(search) || c.owner.toLowerCase().includes(search));
-    document.getElementById('client-count').textContent = clients.length;
-    const wrap = document.getElementById('client-table-wrap');
-    if (clients.length === 0) {
-      wrap.innerHTML = `<div class="empty-state"><div class="empty-icon">🏢</div><div class="empty-title">No clients found</div><div class="empty-desc">${search ? 'No results for that search.' : 'Click "Add New Client" to get started.'}</div></div>`;
-      return;
-    }
-    wrap.innerHTML = `<table>
-      <thead><tr><th>Business</th><th>Owner</th><th>Package</th><th>Industry</th><th>Status</th><th>Revenue</th><th>Added</th><th>Actions</th></tr></thead>
-      <tbody>` + clients.map(c => `<tr>
-        <td><strong>${c.name}</strong>${c.email ? `<br/><span style="color:var(--muted); font-size:0.75rem;">${c.email}</span>` : ''}</td>
-        <td>${c.owner || '—'}</td>
-        <td><span class="badge-pill ${c.package==='Growth'?'pill-blue':c.package==='Enterprise'?'pill-orange':'pill-green'}">${c.package}</span></td>
-        <td style="color:var(--muted);">${c.industry}</td>
-        <td><span class="badge-pill ${c.status==='Active'?'pill-green':c.status==='Onboarding'?'pill-blue':'pill-orange'}"><span class="pill-dot"></span>${c.status}</span></td>
-        <td style="color:var(--accent); font-weight:700;">R${PRICES[c.package].toLocaleString('en-ZA')}</td>
-        <td style="color:var(--muted); font-size:0.78rem;">${c.addedDate}</td>
-        <td style="display:flex; gap:0.4rem; flex-wrap:wrap;">
-          ${c.whatsapp ? `<button class="btn btn-ghost btn-small" onclick="waClient('${c.whatsapp}')">💬</button>` : ''}
-          <button class="btn btn-danger btn-small" onclick="deleteClient(${c.id})">🗑</button>
-        </td>
-      </tr>`).join('') + `</tbody></table>`;
-  }
-
-  function renderRevenuePage() {
-    const clients = getClients();
-    const mrr = clients.reduce((s, c) => s + (PRICES[c.package] || 0), 0);
-    const avg = clients.length ? Math.round(mrr / clients.length) : 0;
-    document.getElementById('rev-total').textContent = 'R' + mrr.toLocaleString('en-ZA');
-    document.getElementById('rev-annual').textContent = 'R' + (mrr * 12).toLocaleString('en-ZA');
-    document.getElementById('rev-avg').textContent = 'R' + avg.toLocaleString('en-ZA');
-
-    // Breakdown
-    const starters = clients.filter(c => c.package === 'Starter');
-    const growths = clients.filter(c => c.package === 'Growth');
-    const enterprises = clients.filter(c => c.package === 'Enterprise');
-    const breakdown = document.getElementById('revenue-breakdown');
-    if (clients.length === 0) {
-      breakdown.innerHTML = `<div style="color:var(--muted); font-size:0.88rem; text-align:center; padding:2rem;">Add clients to see revenue breakdown</div>`;
-    } else {
-      breakdown.innerHTML = [
-        { label: 'Starter', count: starters.length, price: 3000, color: 'var(--accent)' },
-        { label: 'Growth', count: growths.length, price: 8500, color: 'var(--accent2)' },
-        { label: 'Enterprise', count: enterprises.length, price: 20000, color: 'var(--accent3)' }
-      ].filter(r => r.count > 0).map(r => `
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:0.8rem 0; border-bottom:1px solid var(--border);">
-          <div style="display:flex; align-items:center; gap:0.8rem;">
-            <div style="width:10px; height:10px; border-radius:50%; background:${r.color};"></div>
-            <div><div style="font-weight:600;">${r.label}</div><div style="color:var(--muted); font-size:0.78rem;">${r.count} client${r.count>1?'s':''} × R${r.price.toLocaleString('en-ZA')}</div></div>
-          </div>
-          <div style="color:${r.color}; font-weight:700; font-family:'Syne',sans-serif;">R${(r.count*r.price).toLocaleString('en-ZA')}</div>
-        </div>`).join('');
-    }
-
-    // Bar chart — simulate growth over 6 months
-    const months = ['Jan','Feb','Mar','Apr','May','Jun'];
-    const values = [0, 0, mrr * 0.3, mrr * 0.6, mrr * 0.85, mrr].map(v => Math.round(v));
-    const max = Math.max(...values, 1);
-    const chart = document.getElementById('rev-chart');
-    const labels = document.getElementById('rev-chart-labels');
-    chart.innerHTML = values.map((v, i) => `<div class="bar-col"><div class="bar" style="height:${Math.round((v/max)*100)}%;"></div></div>`).join('');
-    labels.innerHTML = months.map((m, i) => `<div style="flex:1; text-align:center; font-size:0.68rem; color:var(--muted);">${m}<br/><span style="color:var(--accent); font-size:0.65rem;">R${values[i].toLocaleString('en-ZA')}</span></div>`).join('');
-  }
-
-  // ============================================================
-  // TOAST
-  // ============================================================
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
-  }
-
-  // ============================================================
-  // INIT
-  // ============================================================
-  refreshAll();
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => { if (window.scrollY >= section.offsetTop - 100) current = section.getAttribute('id'); });
+    navLinks.forEach(link => { link.style.color = ''; if (link.getAttribute('href') === `#${current}`) link.style.color = 'var(--text)'; });
+  });
 </script>
 </body>
 </html>
