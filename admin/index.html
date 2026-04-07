@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - Afriflow AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #0a0f2c; --surface: #111535; --surface2: #171d3f; --surface3: #1e254a; --border: rgba(255,255,255,0.08); --accent: #00e5a0; --accent2: #00b4ff; --accent3: #ff6b35; --text: #f0f2ff; --muted: #7a82a0; --danger: #ff4d4d; --gold: #f5c842; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; min-height: 100vh; }
+
+#login-screen { position: fixed; inset: 0; background: var(–bg); display: flex; align-items: center; justify-content: center; z-index: 999; }
+.login-box { background: var(–surface); border: 1px solid var(–border); border-radius: 24px; padding: 2.5rem; width: 100%; max-width: 380px; text-align: center; }
+.login-logo { width: 56px; height: 56px; background: linear-gradient(135deg, var(–accent), var(–accent2)); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-family: ‘Syne’, sans-serif; font-weight: 800; font-size: 16px; color: #0a0f2c; margin: 0 auto 1.5rem; }
+.login-box h2 { font-family: ‘Syne’, sans-serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 0.4rem; }
+.login-box p { color: var(–muted); font-size: 0.85rem; margin-bottom: 2rem; }
+.login-field { margin-bottom: 1rem; text-align: left; }
+.login-field label { display: block; font-size: 0.78rem; color: var(–muted); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.login-field input { width: 100%; background: var(–surface2); border: 1px solid var(–border); color: var(–text); padding: 0.8rem 1rem; border-radius: 10px; font-family: ‘DM Sans’, sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
+.login-field input:focus { border-color: rgba(0,229,160,0.4); }
+.login-btn { width: 100%; background: var(–accent); color: #0a0f2c; font-weight: 700; font-size: 0.95rem; padding: 0.9rem; border-radius: 10px; border: none; cursor: pointer; font-family: ‘DM Sans’, sans-serif; margin-top: 0.5rem; transition: all 0.2s; }
+.login-btn:hover { opacity: 0.85; }
+.login-error { color: var(–danger); font-size: 0.82rem; margin-top: 0.8rem; display: none; }
+
+#app { display: none; }
+.app-layout { display: flex; min-height: 100vh; }
+.sidebar { width: 220px; min-width: 220px; background: var(–surface); border-right: 1px solid var(–border); padding: 1.5rem 0; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; }
+.sidebar-logo { display: flex; align-items: center; gap: 0.7rem; padding: 0 1.2rem 1.5rem; border-bottom: 1px solid var(–border); margin-bottom: 1rem; }
+.s-logo-badge { width: 34px; height: 34px; background: linear-gradient(135deg, var(–accent), var(–accent2)); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-family: ‘Syne’, sans-serif; font-weight: 800; font-size: 11px; color: #0a0f2c; }
+.s-logo-text { font-family: ‘Syne’, sans-serif; font-weight: 700; font-size: 0.85rem; color: var(–text); line-height: 1.2; }
+.s-logo-sub { font-size: 0.6rem; color: var(–muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.nav-item { display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 1.2rem; cursor: pointer; color: var(–muted); font-size: 0.85rem; font-weight: 500; transition: all 0.2s; border-radius: 0; }
+.nav-item:hover { color: var(–text); background: rgba(255,255,255,0.03); }
+.nav-item.active { color: var(–accent); background: rgba(0,229,160,0.07); border-right: 2px solid var(–accent); }
+.nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+.sidebar-footer { margin-top: auto; padding: 1rem 1.2rem; border-top: 1px solid var(–border); }
+.logout-btn { width: 100%; background: transparent; border: 1px solid var(–border); color: var(–muted); padding: 0.6rem; border-radius: 8px; cursor: pointer; font-family: ‘DM Sans’, sans-serif; font-size: 0.82rem; transition: all 0.2s; }
+.logout-btn:hover { border-color: var(–danger); color: var(–danger); }
+
+.main-content { margin-left: 220px; flex: 1; padding: 2rem; }
+.top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+.page-title { font-family: ‘Syne’, sans-serif; font-size: 1.5rem; font-weight: 800; }
+.page-sub { color: var(–muted); font-size: 0.82rem; margin-top: 0.2rem; }
+.btn-add { background: var(–accent); color: #0a0f2c; font-weight: 700; font-size: 0.85rem; padding: 0.6rem 1.2rem; border-radius: 10px; border: none; cursor: pointer; font-family: ‘DM Sans’, sans-serif; transition: all 0.2s; display: flex; align-items: center; gap: 0.4rem; }
+.btn-add:hover { opacity: 0.85; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+.stat-card { background: var(–surface); border: 1px solid var(–border); border-radius: 14px; padding: 1.4rem; transition: border-color 0.2s; }
+.stat-card:hover { border-color: rgba(0,229,160,0.2); }
+.stat-label { font-size: 0.75rem; color: var(–muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+.stat-value { font-family: ‘Syne’, sans-serif; font-size: 1.8rem; font-weight: 800; line-height: 1; margin-bottom: 0.3rem; }
+.stat-sub { font-size: 0.75rem; color: var(–muted); }
+.stat-accent { color: var(–accent); }
+.stat-blue { color: var(–accent2); }
+.stat-gold { color: var(–gold); }
+
+.card { background: var(–surface); border: 1px solid var(–border); border-radius: 14px; overflow: hidden; margin-bottom: 1.5rem; }
+.card-header { padding: 1.2rem 1.4rem; border-bottom: 1px solid var(–border); display: flex; justify-content: space-between; align-items: center; }
+.card-title { font-family: ‘Syne’, sans-serif; font-weight: 700; font-size: 0.95rem; }
+.search-input { background: var(–surface2); border: 1px solid var(–border); color: var(–text); padding: 0.5rem 0.9rem; border-radius: 8px; font-family: ‘DM Sans’, sans-serif; font-size: 0.82rem; outline: none; width: 200px; }
+.search-input:focus { border-color: rgba(0,229,160,0.4); }
+table { width: 100%; border-collapse: collapse; }
+th { padding: 0.8rem 1.4rem; text-align: left; font-size: 0.72rem; color: var(–muted); text-transform: uppercase; letter-spacing: 0.08em; border-bottom: 1px solid var(–border); font-weight: 600; background: var(–surface2); }
+td { padding: 1rem 1.4rem; font-size: 0.85rem; border-bottom: 1px solid var(–border); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.02); }
+.badge-pkg { font-size: 0.7rem; padding: 0.2rem 0.6rem; border-radius: 100px; font-weight: 700; }
+.pkg-starter { background: rgba(0,180,255,0.1); color: var(–accent2); }
+.pkg-growth { background: rgba(0,229,160,0.1); color: var(–accent); }
+.pkg-enterprise { background: rgba(245,200,66,0.1); color: var(–gold); }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+.dot-active { background: var(–accent); }
+.dot-setup { background: var(–gold); }
+.dot-inactive { background: var(–muted); }
+.action-btn { background: none; border: 1px solid var(–border); color: var(–muted); padding: 0.3rem 0.7rem; border-radius: 6px; cursor: pointer; font-size: 0.78rem; transition: all 0.2s; margin-right: 0.3rem; font-family: ‘DM Sans’, sans-serif; }
+.action-btn:hover { border-color: var(–accent); color: var(–accent); }
+.action-btn.danger:hover { border-color: var(–danger); color: var(–danger); }
+
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; display: none; align-items: center; justify-content: center; padding: 1rem; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(–surface); border: 1px solid var(–border); border-radius: 20px; padding: 2rem; width: 100%; max-width: 480px; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.modal-title { font-family: ‘Syne’, sans-serif; font-weight: 800; font-size: 1.1rem; }
+.modal-close { background: none; border: none; color: var(–muted); cursor: pointer; font-size: 1.2rem; padding: 0.3rem; }
+.form-field { margin-bottom: 1rem; }
+.form-field label { display: block; font-size: 0.78rem; color: var(–muted); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.form-field input, .form-field select { width: 100%; background: var(–surface2); border: 1px solid var(–border); color: var(–text); padding: 0.7rem 0.9rem; border-radius: 8px; font-family: ‘DM Sans’, sans-serif; font-size: 0.88rem; outline: none; transition: border-color 0.2s; }
+.form-field input:focus, .form-field select:focus { border-color: rgba(0,229,160,0.4); }
+.form-field select option { background: var(–surface2); }
+.modal-actions { display: flex; gap: 0.8rem; justify-content: flex-end; margin-top: 1.5rem; }
+.btn-cancel { background: transparent; border: 1px solid var(–border); color: var(–muted); padding: 0.7rem 1.4rem; border-radius: 10px; cursor: pointer; font-family: ‘DM Sans’, sans-serif; font-size: 0.88rem; transition: all 0.2s; }
+.btn-cancel:hover { border-color: rgba(255,255,255,0.2); color: var(–text); }
+.btn-save { background: var(–accent); color: #0a0f2c; border: none; padding: 0.7rem 1.4rem; border-radius: 10px; cursor: pointer; font-family: ‘DM Sans’, sans-serif; font-size: 0.88rem; font-weight: 700; transition: all 0.2s; }
+.btn-save:hover { opacity: 0.85; }
+
+.alert-item { display: flex; align-items: flex-start; gap: 1rem; padding: 1rem 1.4rem; border-bottom: 1px solid var(–border); }
+.alert-item:last-child { border-bottom: none; }
+.alert-icon { font-size: 1.2rem; margin-top: 0.1rem; }
+.alert-text { flex: 1; }
+.alert-title { font-weight: 600; font-size: 0.88rem; margin-bottom: 0.2rem; }
+.alert-desc { color: var(–muted); font-size: 0.8rem; }
+.alert-time { font-size: 0.75rem; color: var(–muted); white-space: nowrap; }
+
+.settings-section { background: var(–surface); border: 1px solid var(–border); border-radius: 14px; margin-bottom: 1.5rem; }
+.settings-header { padding: 1rem 1.4rem; border-bottom: 1px solid var(–border); font-family: ‘Syne’, sans-serif; font-weight: 700; font-size: 0.9rem; }
+.settings-row { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.4rem; border-bottom: 1px solid var(–border); }
+.settings-row:last-child { border-bottom: none; }
+.settings-label { font-weight: 600; font-size: 0.85rem; margin-bottom: 0.2rem; }
+.settings-sub { color: var(–muted); font-size: 0.78rem; }
+.settings-value { color: var(–muted); font-size: 0.85rem; }
+.settings-value.accent { color: var(–accent); }
+
+.toast { position: fixed; bottom: 2rem; right: 2rem; background: var(–surface); border: 1px solid var(–accent); color: var(–text); padding: 0.8rem 1.2rem; border-radius: 10px; font-size: 0.85rem; z-index: 9999; transform: translateY(100px); opacity: 0; transition: all 0.3s; box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+.toast.show { transform: translateY(0); opacity: 1; }
+
+.page { display: none; }
+.page.active { display: block; }
+</style>
+
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">AF</div>
+    <h2>Admin Login</h2>
+    <p>Afriflow AI — Bohlale Automated Services</p>
+    <div class="login-field"><label>Username</label><input type="text" id="login-user" placeholder="Enter username"></div>
+    <div class="login-field"><label>Password</label><input type="password" id="login-pass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="login-error" id="login-error">Incorrect username or password.</div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="app-layout">
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="s-logo-badge">AF</div>
+        <div><div class="s-logo-text">Afriflow AI</div><div class="s-logo-sub">Admin Panel</div></div>
+      </div>
+      <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="nav-icon">📊</span>Dashboard</div>
+      <div class="nav-item" onclick="showPage('clients',this)"><span class="nav-icon">🏢</span>Clients</div>
+      <div class="nav-item" onclick="showPage('revenue',this)"><span class="nav-icon">💰</span>Revenue</div>
+      <div class="nav-item" onclick="showPage('alerts',this)">
+        <span class="nav-icon">🔔</span>Alerts
+        <span style="margin-left:auto;background:var(--danger);color:white;font-size:0.65rem;padding:0.1rem 0.4rem;border-radius:100px;font-weight:700;">2</span>
+      </div>
+      <div class="nav-item" onclick="showPage('settings',this)"><span class="nav-icon">⚙️</span>Settings</div>
+      <div class="sidebar-footer">
+        <button class="logout-btn" onclick="doLogout()">Sign Out</button>
+      </div>
+    </div>
+
+```
+<div class="main-content">
+
+  <div class="page active" id="page-dashboard">
+    <div class="top-bar">
+      <div><div class="page-title">Dashboard</div><div class="page-sub">Welcome back, Lethabo. Here is your overview.</div></div>
+      <button class="btn-add" onclick="openModal()">+ Add Client</button>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">Total Clients</div><div class="stat-value stat-accent" id="dash-total">0</div><div class="stat-sub">Active businesses</div></div>
+      <div class="stat-card"><div class="stat-label">Monthly Revenue</div><div class="stat-value stat-accent" id="dash-mrr">R0</div><div class="stat-sub">Recurring every month</div></div>
+      <div class="stat-card"><div class="stat-label">Annual Run Rate</div><div class="stat-value stat-blue" id="dash-arr">R0</div><div class="stat-sub">If all clients stay</div></div>
+      <div class="stat-card"><div class="stat-label">Active Systems</div><div class="stat-value stat-gold" id="dash-active">0</div><div class="stat-sub">Live automations</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Recent Clients</div></div>
+      <table><thead><tr><th>Business</th><th>Package</th><th>Monthly Value</th><th>Status</th></tr></thead>
+      <tbody id="dash-table"><tr><td colspan="4" style="color:var(--muted);text-align:center;padding:2rem;">No clients yet. Click Add Client to get started.</td></tr></tbody></table>
+    </div>
+  </div>
+
+  <div class="page" id="page-clients">
+    <div class="top-bar">
+      <div><div class="page-title">Clients</div><div class="page-sub">Manage all your client businesses.</div></div>
+      <button class="btn-add" onclick="openModal()">+ Add Client</button>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">All Clients (<span id="client-count">0</span>)</div>
+        <input class="search-input" id="client-search" placeholder="Search clients..." oninput="renderClientTable()">
+      </div>
+      <table><thead><tr><th>Business Name</th><th>Owner</th><th>WhatsApp</th><th>Package</th><th>Monthly Value</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="client-table"><tr><td colspan="7" style="color:var(--muted);text-align:center;padding:2rem;">No clients yet. Click Add Client to get started.</td></tr></tbody></table>
+    </div>
+  </div>
+
+  <div class="page" id="page-revenue">
+    <div class="top-bar"><div><div class="page-title">Revenue</div><div class="page-sub">Your monthly recurring revenue breakdown.</div></div></div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">Monthly Recurring</div><div class="stat-value stat-accent" id="rev-mrr">R0</div><div class="stat-sub">Total this month</div></div>
+      <div class="stat-card"><div class="stat-label">Annual Run Rate</div><div class="stat-value stat-blue" id="rev-arr">R0</div><div class="stat-sub">Projected yearly</div></div>
+      <div class="stat-card"><div class="stat-label">Starter Clients</div><div class="stat-value" id="rev-starter">0</div><div class="stat-sub">R3,000 each</div></div>
+      <div class="stat-card"><div class="stat-label">Growth Clients</div><div class="stat-value stat-accent" id="rev-growth">0</div><div class="stat-sub">R8,500 each</div></div>
+      <div class="stat-card"><div class="stat-label">Enterprise Clients</div><div class="stat-value stat-gold" id="rev-enterprise">0</div><div class="stat-sub">R20,000 each</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Revenue by Client</div></div>
+      <table><thead><tr><th>Business</th><th>Package</th><th>Monthly Value</th><th>Since</th></tr></thead>
+      <tbody id="rev-table"><tr><td colspan="4" style="color:var(--muted);text-align:center;padding:2rem;">No clients yet.</td></tr></tbody></table>
+    </div>
+  </div>
+
+  <div class="page" id="page-alerts">
+    <div class="top-bar"><div><div class="page-title">Alerts</div><div class="page-sub">System notifications and action items.</div></div></div>
+    <div class="card">
+      <div class="alert-item"><div class="alert-icon">⚠️</div><div class="alert-text"><div class="alert-title">PayFast credentials not configured</div><div class="alert-desc">Open checkout.html and replace YOUR_MERCHANT_ID and YOUR_MERCHANT_KEY with your real PayFast credentials.</div></div><div class="alert-time">Action needed</div></div>
+      <div class="alert-item"><div class="alert-icon">ℹ️</div><div class="alert-text"><div class="alert-title">Website not yet hosted online</div><div class="alert-desc">Upload your afriflow folder to Netlify to get a live public URL you can share with clients.</div></div><div class="alert-time">Recommended</div></div>
+      <div class="alert-item"><div class="alert-icon">✅</div><div class="alert-text"><div class="alert-title">Admin dashboard is working</div><div class="alert-desc">Your login and client management system is fully operational.</div></div><div class="alert-time">Complete</div></div>
+    </div>
+  </div>
+
+  <div class="page" id="page-settings">
+    <div class="top-bar"><div><div class="page-title">Settings</div><div class="page-sub">Your account and system configuration.</div></div></div>
+    <div class="settings-section">
+      <div class="settings-header">Your Account</div>
+      <div class="settings-row"><div><div class="settings-label">Owner</div><div class="settings-sub">Your name</div></div><div class="settings-value">Lethabo Mashia</div></div>
+      <div class="settings-row"><div><div class="settings-label">Business</div><div class="settings-sub">Trading name</div></div><div class="settings-value">Bohlale Automated Services</div></div>
+      <div class="settings-row"><div><div class="settings-label">Product</div><div class="settings-sub">System name</div></div><div class="settings-value accent">Afriflow AI</div></div>
+      <div class="settings-row"><div><div class="settings-label">Username</div><div class="settings-sub">Admin login</div></div><div class="settings-value">lethabo</div></div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-header">Contact Details</div>
+      <div class="settings-row"><div><div class="settings-label">WhatsApp</div><div class="settings-sub">Client contact number</div></div><div class="settings-value accent">+27 658 619 866</div></div>
+      <div class="settings-row"><div><div class="settings-label">Email</div><div class="settings-sub">Business email</div></div><div class="settings-value accent">lethabomashia17@gmail.com</div></div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-header">Payment Setup</div>
+      <div class="settings-row"><div><div class="settings-label">PayFast Merchant ID</div><div class="settings-sub">Add to checkout.html</div></div><div class="settings-value" style="color:var(--danger);">Not configured</div></div>
+      <div class="settings-row"><div><div class="settings-label">How to get paid</div><div class="settings-sub">Step by step</div></div><div class="settings-value" style="max-width:300px;text-align:right;line-height:1.5;">Register at payfast.co.za as a Merchant. Verify your ID and bank account. Copy your Merchant ID and Key into checkout.html.</div></div>
+    </div>
+  </div>
+
+</div>
+```
+
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Add New Client</div>
+      <button class="modal-close" onclick="closeModal()">x</button>
+    </div>
+    <div class="form-field"><label>Business Name</label><input type="text" id="m-bname" placeholder="e.g. Elegance Hair Studio"></div>
+    <div class="form-field"><label>Owner Name</label><input type="text" id="m-owner" placeholder="e.g. Thandi Molefe"></div>
+    <div class="form-field"><label>WhatsApp Number</label><input type="tel" id="m-phone" placeholder="0612345678"></div>
+    <div class="form-field"><label>Package</label>
+      <select id="m-pkg">
+        <option value="Starter">Starter - R3,000/month</option>
+        <option value="Growth" selected>Growth - R8,500/month</option>
+        <option value="Enterprise">Enterprise - R20,000/month</option>
+      </select>
+    </div>
+    <div class="form-field"><label>Status</label>
+      <select id="m-status">
+        <option value="setup">In Setup</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+      </select>
+    </div>
+    <div class="form-field"><label>Start Date</label><input type="date" id="m-date"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveClient()">Save Client</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var clients = JSON.parse(localStorage.getItem('af_clients') || '[]');
+var PKG_PRICES = { Starter: 3000, Growth: 8500, Enterprise: 20000 };
+
+var ADMIN_USER = 'lethabo';
+var ADMIN_PASS = 'BAS2025admin!';
+
+function doLogin() {
+  var u = document.getElementById('login-user').value.trim();
+  var p = document.getElementById('login-pass').value.trim();
+  var err = document.getElementById('login-error');
+  if (u === ADMIN_USER && p === ADMIN_PASS) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    renderAll();
+  } else {
+    err.style.display = 'block';
+  }
+}
+
+function doLogout() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+}
+
+function showPage(name, el) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+  document.getElementById('page-' + name).classList.add('active');
+  el.classList.add('active');
+}
+
+function openModal() {
+  document.getElementById('m-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.getElementById('m-bname').value = '';
+  document.getElementById('m-owner').value = '';
+  document.getElementById('m-phone').value = '';
+  document.getElementById('m-pkg').value = 'Growth';
+  document.getElementById('m-status').value = 'setup';
+}
+
+function saveClient() {
+  var bname = document.getElementById('m-bname').value.trim();
+  var owner = document.getElementById('m-owner').value.trim();
+  if (!bname || !owner) { alert('Please enter the business name and owner name.'); return; }
+  var client = {
+    id: Date.now(),
+    bname: bname,
+    owner: owner,
+    phone: document.getElementById('m-phone').value.trim(),
+    pkg: document.getElementById('m-pkg').value,
+    status: document.getElementById('m-status').value,
+    date: document.getElementById('m-date').value
+  };
+  clients.push(client);
+  localStorage.setItem('af_clients', JSON.stringify(clients));
+  closeModal();
+  renderAll();
+  showToast('Client added successfully!');
+}
+
+function deleteClient(id) {
+  if (!confirm('Delete this client? This cannot be undone.')) return;
+  clients = clients.filter(function(c) { return c.id !== id; });
+  localStorage.setItem('af_clients', JSON.stringify(clients));
+  renderAll();
+  showToast('Client deleted.');
+}
+
+function renderAll() {
+  var total = clients.length;
+  var mrr = clients.reduce(function(s, c) { return s + (PKG_PRICES[c.pkg] || 0); }, 0);
+  var active = clients.filter(function(c) { return c.status === 'active'; }).length;
+
+  document.getElementById('dash-total').textContent = total;
+  document.getElementById('dash-mrr').textContent = 'R' + mrr.toLocaleString();
+  document.getElementById('dash-arr').textContent = 'R' + (mrr * 12).toLocaleString();
+  document.getElementById('dash-active').textContent = active;
+  document.getElementById('rev-mrr').textContent = 'R' + mrr.toLocaleString();
+  document.getElementById('rev-arr').textContent = 'R' + (mrr * 12).toLocaleString();
+  document.getElementById('rev-starter').textContent = clients.filter(function(c){return c.pkg==='Starter';}).length;
+  document.getElementById('rev-growth').textContent = clients.filter(function(c){return c.pkg==='Growth';}).length;
+  document.getElementById('rev-enterprise').textContent = clients.filter(function(c){return c.pkg==='Enterprise';}).length;
+  document.getElementById('client-count').textContent = total;
+
+  renderDashTable();
+  renderClientTable();
+  renderRevTable();
+}
+
+function pkgBadge(pkg) {
+  var cls = pkg === 'Starter' ? 'pkg-starter' : pkg === 'Growth' ? 'pkg-growth' : 'pkg-enterprise';
+  return '<span class="badge-pkg ' + cls + '">' + pkg + '</span>';
+}
+
+function statusBadge(s) {
+  var dot = s === 'active' ? 'dot-active' : s === 'setup' ? 'dot-setup' : 'dot-inactive';
+  var label = s === 'active' ? 'Active' : s === 'setup' ? 'In Setup' : 'Inactive';
+  return '<span class="status-dot ' + dot + '"></span>' + label;
+}
+
+function renderDashTable() {
+  var tb = document.getElementById('dash-table');
+  if (!clients.length) { tb.innerHTML = '<tr><td colspan="4" style="color:var(--muted);text-align:center;padding:2rem;">No clients yet. Click Add Client to get started.</td></tr>'; return; }
+  var rows = clients.slice(-5).reverse().map(function(c) {
+    return '<tr><td><strong>' + c.bname + '</strong></td><td>' + pkgBadge(c.pkg) + '</td><td style="color:var(--accent);">R' + (PKG_PRICES[c.pkg]||0).toLocaleString() + '</td><td>' + statusBadge(c.status) + '</td></tr>';
+  });
+  tb.innerHTML = rows.join('');
+}
+
+function renderClientTable() {
+  var tb = document.getElementById('client-table');
+  var q = (document.getElementById('client-search').value || '').toLowerCase();
+  var filtered = clients.filter(function(c) { return !q || c.bname.toLowerCase().includes(q) || c.owner.toLowerCase().includes(q); });
+  if (!filtered.length) { tb.innerHTML = '<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:2rem;">No clients found.</td></tr>'; return; }
+  var rows = filtered.map(function(c) {
+    return '<tr><td><strong>' + c.bname + '</strong></td><td>' + c.owner + '</td><td>' + (c.phone || '-') + '</td><td>' + pkgBadge(c.pkg) + '</td><td style="color:var(--accent);">R' + (PKG_PRICES[c.pkg]||0).toLocaleString() + '</td><td>' + statusBadge(c.status) + '</td><td><button class="action-btn danger" onclick="deleteClient(' + c.id + ')">Delete</button></td></tr>';
+  });
+  tb.innerHTML = rows.join('');
+}
+
+function renderRevTable() {
+  var tb = document.getElementById('rev-table');
+  if (!clients.length) { tb.innerHTML = '<tr><td colspan="4" style="color:var(--muted);text-align:center;padding:2rem;">No clients yet.</td></tr>'; return; }
+  var rows = clients.map(function(c) {
+    return '<tr><td><strong>' + c.bname + '</strong></td><td>' + pkgBadge(c.pkg) + '</td><td style="color:var(--accent);">R' + (PKG_PRICES[c.pkg]||0).toLocaleString() + '</td><td>' + (c.date || '-') + '</td></tr>';
+  });
+  tb.innerHTML = rows.join('');
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 3000);
+}
+</script>
+
+</body>
+</html>
